@@ -1,3 +1,7 @@
+.width--100 {
+    width: 100%;
+}
+
 .flex {
     display: flex;
 }
@@ -56,4 +60,28 @@
 
 .flex--4 {
     flex: 4;
+}
+
+.flex--5 {
+    flex: 5;
+}
+
+.flex--6 {
+    flex: 5;
+}
+
+.flex--10 {
+    flex: 10;
+}
+
+.flex--13 {
+    flex: 13;
+}
+
+.font--size--12 {
+    font-size: 12px;
+}
+
+.cursor--pointer {
+    cursor: pointer;
 }
