@@ -1,20 +1,22 @@
 //DOMContentLoaded
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('Carregou');
+console.log('Carregou');
 
 const inputMsg = document.querySelector('#InputMenssage');
 console.log(inputMsg);
 
 inputMsg.placeholder = "Digite a sua mensagem";
 
-const buttonsMsg = document.querySelectorAll('.cursor--pointer');
-console.log(buttonsMsg);
+// const buttonsMsg = document.querySelectorAll('.cursor--pointer');
 
 const buttonSend = document.querySelector(".cursor--pointer[src*='Send']");
-console.log(buttonSend);
 
 const listMsg = document.querySelector(".div--message");
-console.log(listMsg)
+
+const inputContact = document.querySelector(".div--search input[type='search']");
+
+const inputSearchMessage = document.getElementById("search-message");
+console.log(inputSearchMessage)
 
 const listContact = [
     {
@@ -140,6 +142,18 @@ const listContact = [
     }
 ];
 
+inputSearchMessage.addEventListener('input', () => {
+    const termSearch = inputSearchMessage.value;
+    console.log(`O termo buscado foi: ${termSearch}`);
+    searchMessage(termSearch);
+})
+
+inputContact.addEventListener('input', () => {
+    const termSearch = inputContact.value;
+    console.log(`O termo buscado foi: ${termSearch}`);
+    loadContact(termSearch);
+});
+
 // buttonSend.classList.add("minha-classe");
 
 const responseBot = [
@@ -148,6 +162,38 @@ const responseBot = [
     'Qual seu nome',
     'Meu nome é bot',
 ]
+
+function searchMessage(term) {
+    let foundMsg = false;
+    const msgElements = document.querySelectorAll('.message');
+
+    msgElements.forEach((msg) => {
+        const textOriginal = msg.innerText;
+        const textNormal = textOriginal.toLowerCase();
+        const termNormal = term.toLowerCase();
+
+        if (textNormal.includes(termNormal) && term !== "") {
+            foundMsg = true;
+
+            const textHighlighted = textOriginal.replace(
+                new RegExp(`(${term})`, 'gi'),
+                "<span class='highlight'>$1</span>"
+            );
+
+            msg.innerHTML = textHighlighted;
+            msg.style.display = "block";
+        } else if (term !== "") {
+            msg.style.display = "none";
+        } else {
+            msg.style.display = "block";
+            msg.innerHTML = msg.innerText;
+        }
+    });
+
+    if (!foundMsg && term !== "") {
+        console.log("Não houve resultado");
+    }
+}
 
 function sendMsg () {
         const text = inputMsg.value.trim();
@@ -214,10 +260,19 @@ function loadMsgContact (index) {
     });
 }
 
-function loadContact() {
+function loadContact(filter = '') {
+    
     const divContactElement = document.querySelector('.div--contact');
+    divContactElement.innerHTML = '';
 
-    listContact.forEach((contact, index) => {
+    const contactFilter = listContact.filter((contact) => contact.name.toLowerCase().includes(filter.toLowerCase()));
+
+    if (contactFilter.length === 0){
+        divContactElement.innerHTML = '<div><span> Contato não encontrado </span></div>';
+        return;
+    }
+
+    contactFilter.forEach((contact, index) => {
         console.log(contact);
 
         const divParentElement = document.createElement('div');
@@ -256,6 +311,6 @@ function loadContact() {
 
     setTimeout(() => {
         loadContact();
-    }, 2500);
+    }, 1000);
 
 });
